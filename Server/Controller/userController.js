@@ -1,14 +1,14 @@
 import userSchema from "../Model/userModel.js";
 import quizSchema from "../Model/quizModel.js"
 import bcrypt from "bcrypt";
-import generateOtp from "../OtpGenerator/generateOTP.js";
-import verifyOtp from "../OtpGenerator/verifyOTP.js";
 
-let globalData = {};
+
+
 
 /**************************** User Register Send Otp *************************************/
 
-const userRegisterSendOtp = async (req, res) => {
+const userRegister = async (req, res) => {
+  console.log(req.body);
   try {
     const { name, email, phone, password } = req.body;
 
@@ -17,10 +17,7 @@ const userRegisterSendOtp = async (req, res) => {
     if (emailfind) {
       res.status(400).json(" email already existing");
     } else {
-      const message = "Your OTP for email verification";
-      const subject = "Email Authentication Otp";
-      const otp = await generateOtp(email, message, subject, res);
-      res.status(200).json({ message: "OTP sent successfully" });
+      
       const saltRounds = 10;
       bcrypt.hash(password, saltRounds, async (err, hash) => {
         if (err) {
@@ -30,15 +27,16 @@ const userRegisterSendOtp = async (req, res) => {
           return;
         }
 
-        const newuser = {
+        const newuser = new UserSchema ({
           name: name,
           email: email,
           password: hash,
           phone: phone,
-        };
-
-        globalData.user = newuser;
-        globalData.otp = otp;
+        });
+        await newuser.save()
+console.log(newuser);
+        res.status(200).json({ newuser });
+        
       });
     }
   } catch (error) {
@@ -46,38 +44,7 @@ const userRegisterSendOtp = async (req, res) => {
   }
 };
 
-/**************************** User Register Verify Otp *************************************/
 
-const userRegisterVerifyOtp = async (req, res) => {
-  try {
-    const { verificationCode } = req.body;
-
-    if (!verificationCode) {
-      return res.status(400).json({ error: "Verification code is required" });
-    }
-
-    const otpResponse = await verifyOtp(verificationCode, globalData?.otp, res);
-
-    if (!otpResponse) {
-      return res.status(400).json({ message: "OTP verification failed" });
-    }
-
-    const newUser = await userSchema.create(globalData.user);
-    globalData.user = null;
-    globalData.otp = null;
-  
-
-    return res.status(200).json({
-      _id: newUser._id,
-      name: newUser.name,
-      email: newUser.email,
-      phone: newUser.phone,
-      
-    });
-  } catch (error) {
-
-  }
-};
 
 /**************************** User Login  *************************************/
 
@@ -133,8 +100,8 @@ const userGetQuiz= async (req,res)=>{
 
 
 export {
-  userRegisterSendOtp,
-  userRegisterVerifyOtp,
+  userRegister,
+  
   userLogin,
   userGetQuiz
 };

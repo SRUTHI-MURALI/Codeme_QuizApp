@@ -76,8 +76,12 @@ function Register() {
     }
 
     try {
-        const res = await axios.post(`${Base_Url}/user/register`,{trimmedName, trimmedEmail, trimmedPhone, trimmedPassword}) 
-      console.log(res);
+        const res= await axios.post(`${Base_Url}/user/register`,{trimmedName, trimmedEmail, trimmedPhone, trimmedPassword}) 
+      if(res){
+        
+        handleNavigation(trimmedEmail);
+      }
+
       
     } catch (error) {
       toast.error("Registration error");
@@ -85,9 +89,9 @@ function Register() {
     }
   };
 
-//   const handleNavigation = (email) => {
-//     navigate(`/verifyOtp/${email}`);
-//   };
+  const handleNavigation = (email) => {
+    navigate(`/verifyOtp/${email}`);
+  };
 
   return (
     <Container className="mt-5" style={{ width: "50rem" }}>

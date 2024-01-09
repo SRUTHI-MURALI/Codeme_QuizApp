@@ -11,15 +11,17 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { useState, useEffect } from "react";
 
-import { useDispatch } from "react-redux";
-import { login } from "../Redux/UserSlice";
-import { userLogin } from "../AxiosConfig/AxiosConfig";
 
-function LoginForm() {
+
+
+import { Base_Url } from "../../../../Config/Config";
+import axios from "axios";
+
+function Login() {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
 
-  const dispatch = useDispatch();
+  
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -41,14 +43,14 @@ function LoginForm() {
     }
 
     try {
-      const response = await userLogin(trimmedEmail, trimmedPassword);
+      const res= await axios.post(`${Base_Url}/user/login`,{email,password}) 
 
-      const userData = response.data;
+      const userData = res.data;
 
       localStorage.setItem("userData", JSON.stringify(userData));
-      dispatch(login(userData));
+     
       toast.success("successfully logged in");
-      navigate("/homePage");
+      
     } catch (error) {
       // Display the error message from the response
       if (
@@ -131,4 +133,4 @@ function LoginForm() {
   );
 }
 
-export default LoginForm;
+export default Login;

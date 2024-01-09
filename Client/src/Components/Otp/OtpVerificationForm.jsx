@@ -26,11 +26,11 @@ function OtpVerificationForm({ email }) {
     }
 
     try {
-        const res= await axios.post(`${Base_Url}/user/verifyOtp`,{trimmedOtp}) 
+         await axios.post(`${Base_Url}/user/verifyOtp`,{trimmedOtp}) 
         .then(() => {
           alert("Otp verified successfully");
-        //   navigate("/login");
-        console.log(res,'ll');
+          navigate("/login");
+    
         })
         .catch((error) => {
           error.response &&

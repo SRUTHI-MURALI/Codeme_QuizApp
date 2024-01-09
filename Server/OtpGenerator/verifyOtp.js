@@ -1,6 +1,6 @@
-const verifyOtp = (verificationCode, otp, res) => {
+const verifyOtp = (trimmedOtp, otp, res) => {
     try {
-      if (verificationCode == otp) {
+      if (trimmedOtp == otp) {
         return true;
       } else {
         return false;

@@ -1,1 +1,1 @@
-export const Base_Url = import.meta.env.VITE_Base_Url
+export const Base_Url = "https://codeme-backend.onrender.com"

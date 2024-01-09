@@ -14,6 +14,11 @@ app.use(express.json());
 connectDB();
 const port = process.env.PORT;
 
+const corsOption = {
+  origin: '*'
+};
+app.use(cors(corsOption));
+
 app.use("/user", userRouter);
 app.use("/user", adminRouter);
 

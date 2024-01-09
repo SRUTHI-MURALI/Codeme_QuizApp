@@ -1,1 +1,1 @@
-export const Base_Url = "http://localhost:3001";
+export const Base_Url = import.meta.env.VITE_Base_Url
